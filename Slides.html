@@ -1,0 +1,694 @@
+<!DOCTYPE html>
+<html lang="" xml:lang="">
+  <head>
+    <title>Statistics and the law: what’s the verdict?</title>
+    <meta charset="utf-8" />
+    <meta name="author" content="University of Edinburgh" />
+    <meta name="date" content="2024-11-29" />
+    <script src="libs/header-attrs-2.18/header-attrs.js"></script>
+    <link rel="stylesheet" href="xaringan-themer.css" type="text/css" />
+    <link rel="stylesheet" href="slides.css" type="text/css" />
+  </head>
+  <body>
+    <textarea id="source">
+class: center, middle, inverse, title-slide
+
+.title[
+# Statistics and the law: what’s the verdict?
+]
+.subtitle[
+## Amy Wilson
+]
+.author[
+### University of Edinburgh
+]
+.date[
+### 29 November 2024
+]
+
+---
+
+
+
+
+class: top
+
+# Introduction
+
+.pull-left[
+
+- Likelihood ratios for single items of forensic evidence
+
+- Graphical modelling for more complicated combinations of evidence. Two examples: drugs on banknotes and the case of Meredith Kercher. 
+
+- RSS Statistics and the Law Section activity
+
+- Including the "Healthcare Serial Killer or Coincidence?" report of September 2022.
+]
+
+.pull-right[
+
+
+.center[
+&lt;img src="img/scales.png" width="60%" /&gt;
+]
+]
+
+---
+
+class:middle
+
+#Likelihood Ratios
+
+---
+class:top
+
+#Likelihood Ratios for statistical evidence
+
+
+- Many types of forensic evidence are associated with measurements and data - DNA, trace evidence, biometric evidence.
+
+- How should these measurements be interpreted in a court of law?
+
+- For single piece of evidence can build
+statistical model and evaluate Bayes’ Factor under various
+hypotheses being considered by court.
+
+- For evidence `\(E\)`, prosecution proposition `\(H_p\)` and defence proposition `\(H_d\)`:
+
+`$$\frac{P(E \mid H_p)}{P(E \mid H_d)}$$`
+
+- Methodology features in Forensic Science Regulator Code of Conduct: 
+https://assets.publishing.service.gov.uk/media/602407728fa8f5146f0769d9/FSR-C-118_Interpretation_Appendix_Issue_1__002_.pdf
+
+
+---
+class: top
+# Multiple pieces of evidence
+
+- But what about when we have multiple pieces of interrelated
+evidence? How should the likelihood ratio be computed?
+
+- Bayesian Networks first used for the modelling of legal evidence in 1989 in paper by Aitken and Gammerman. 
+
+.center[
+&lt;img src="Slides_files/figure-html/unnamed-chunk-2-1.png" width="45%" /&gt;
+]
+---
+
+class:middle
+
+# Probabilistic reasoning in legal cases
+
+---
+
+
+class: top
+
+# Probabilistic reasoning in legal cases
+
+- Work with Jim Smith, Gail Robertson, Philip Dawid, Jay Kadane,
+Julia Mortera, Francesco Dotto. Funded by Turing Institute.
+
+- Can graphical methods be used to aid decision-making in legal cases? For example, to assist lawyers in putting together arguments for a case and to assist the judge and jury in coming to conclusions?
+
+- Or at least to help ensure that the evidential weight of dependent pieces of statistical evidence is computed in a probabilistically correct framework. 
+
+- Will focus on use of Chain Event Graphs. 
+---
+
+class:top
+
+# Chain Event Graphs
+
+- More concise expression of an event tree
+
+- Start with an event tree, with nodes representing states or events and directed edges represented transitions between these events.
+
+- Each edge is associated with a conditional probability - the probability of transitioning between the two nodes given what has come before in the graph.
+
+- Each path through the tree describes a possible unfolding story in the case. Represent competing hypotheses for how the evidence arose in the case. 
+
+- Colours are used to identify groups of edges with the same probabilities.
+---
+
+class:top
+
+# Event tree
+
+- Assailant stabs victim using an identified knife `\(S_{1}\)` or some other knife 
+`\(S_{2}\)` before discarding `\(D_{i}\)` or cleaning `\(C_{i}\)` it and putting it in the cutlery drawer.
+- Precise knife used in the attack is agreed to be independent of where it was
+subsequently placed - nodes coloured red. 
+
+.center[
+&lt;img src="Slides_files/figure-html/unnamed-chunk-3-1.png" width="45%" /&gt;
+]
+
+
+---
+
+class:top
+
+# Event tree to Chain Event Graph
+
+- To convert to a chain event graph, amalgamate sub trees that are isomorphic (same topology and colour)
+
+- And draw into a sink node
+
+- Each path through the graph describes a possible unfolding in the case
+
+.center[
+&lt;img src="Slides_files/figure-html/unnamed-chunk-4-1.png" width="70%" /&gt;
+]
+
+---
+class: top
+
+# Bayesian networks (BNs) vs Chain Event Graphs (CEGs)
+
+- Unlike BNs, CEGs describe time-ordered paths. Easy to see chains of events through time.
+
+- CEGs can represent asymmetric situations easily - just end the path! In a BN would need to continue enumerating situations that we know did not occur. 
+
+- CEGs generally less compact than BNs and fewer software packages available to help construct them.
+
+- Advantage of CEG over event tree is that conditional dependence relationships are expressed. 
+
+- For all graphical methods, need to assign probabilities to edges. Subjective. 
+
+---
+
+class: top
+
+# Chain event graphs for legal reasoning
+
+Two adaptations to standard CEGs needed for legal reasoning:
+
+- Trials tend to have two competing sides - prosecution and defence. Thus we use two sink nodes so each path through the network is associated with one side.
+
+- In legal cases, graphs contain evidence. We already know what the outcome of this evidence is. Thus don't need to include edges to model all possibilities (e.g. the DNA measurements were X so no need to model the case where their value is Y). Evidence edges are represented as single edges, but we keep the probability of the edge to be the prior probability (i.e. before observing the evidence). This means that we can calculate likelihood ratios and other statistics of interest but the graph is much smaller.
+
+---
+
+class: top
+
+# Drugs on banknotes
+
+.center[
+&lt;img src="img/8268exhibits008.jpg" width="70%" /&gt;
+]
+
+---
+
+class: top
+
+# Example: drugs on banknotes
+
+- Previous work, evaluating likelihood ratios for evidence consisting of traces of drugs on banknotes. Used as evidence in drug dealing convictions. 
+
+- Problem: there may be legitimate reasons why banknotes have traces of drug on them. Drug use, notes contaminated before coming into suspect's possession, background contamination. What does "associated with drug dealing" mean for banknotes?!
+
+- We need to say something about how the banknotes came to be contaminated for the evidence to be meaningful (activity-level propositions).
+
+- Looked at slightly altered example of real case.
+
+---
+
+class:top
+
+# Storylines
+
+.center[
+&lt;img src="img/banknotes.png" width="100%" /&gt;
+]
+
+---
+
+class:top
+
+# Evidence and arguments
+
+Evidence
+- £100k found at property in safe
+- This was not in a bank
+- Measurements taken of heroin on banknotes
+- Measurements taken of contamination on tamper evident bags
+
+Arguments
+- `\(H_{p_1}\)`: The suspect obtained the banknotes by dealing drugs 
+- `\(H_{p_2}\)`: The suspect knowingly used a jewellery business to launder money obtained by the drug trafficking activities of others.
+- `\(H_{d_1}\)`: The suspect had a legitimate jewellery business selling jewellery to the general public
+- `\(H_{d_2}\)`: The suspect used a jewellery business to launder money obtained by the drug trafficking activities of others but was not aware of this
+    
+---
+
+class:top
+
+# Staged tree
+
+.center[
+&lt;img src="img/StagedTreeAmy2.jpg" width="45%" /&gt;
+]
+
+---
+
+class:top
+
+#Chain Event Graph
+
+.center[
+&lt;img src="img/CEGAmy_colour3.jpg" width="55%" /&gt;
+]
+
+---
+
+class:top
+
+# Using the Graph
+
+- For judges/ jury. Easy to compute probabilities of paths or groups of paths, just multiply the edges together. E.g., prosecution storylines:
+
+$$
+`\begin{split}
+P(\triangle)  = &amp; ((1 - \alpha) \ \psi\ + \alpha\ (1 - \beta)\ (1 - \delta)\ \psi) \ \zeta\ (\eta\ (\theta'\ f_7(\mathbf{Y}, \mathbf{Z} \mid s) + \\
+&amp;\rho'\ f_8(\mathbf{Y}, \mathbf{Z} \mid s) + \tau'\ f_9(\mathbf{Y}, \mathbf{Z} \mid s)) + (1 - \eta)\ (\kappa'\ f_{10}(\mathbf{Y}, \mathbf{Z} \mid s) \\
+&amp;+ \upsilon'\ f_{11}(\mathbf{Y}, \mathbf{Z} \mid s) + \phi'\ f_{12}(\mathbf{Y}, \mathbf{Z} \mid s)))
+\end{split}`
+$$
+
+- For forensic scientists. Also possible to compute LRs for the evidence by conditioning on the edges associated with the propositions. 
+
+- For lawyers. Can do sensitivity analysis, investigate which arguments are plausible.
+
+---
+
+class: middle
+
+#The case of Meredith Kercher
+
+---
+
+
+class: top
+
+# Example: the case of Meredith Kercher
+
+- High profile Italian case. Murder of British Erasmus student, Meredith Kercher, 2007.
+
+- Amanda Knox (her flatmate) and Raeffele Sollecito (Knox's boyfriend) accused of the murder. 
+
+- First trial 2009, found guilty. Acquitted in 2011. 2013 found guilty again. 2015 acquitted again. 
+
+- Another individual, Rudy Guede was sentenced in 2008 to 30 years imprisonment. 
+
+- Two key items of forensic evidence: Sollecito's DNA found on Kercher's bra clasp in her bedroom 46 days after murder and Knox's DNA found on handle of kitchen knife purported to be used for the murder (with low copy DNA on blade declared to be from Kercher).
+
+- Only considered knife evidence from first trial (and excluded DNA).
+
+
+---
+
+class: top
+
+# The knife evidence
+
+- Knife found in a cutlery drawer in Sollecito's apartment.
+
+- Sollecito's knife - 17.5 cm blade length, 3 cm wide, 1.5 mm thick.
+
+- Wounds: fatal wound on left of neck- 8 cm deep, 8 cm long and 0.4 cm wide. Smaller wound on right of neck - 4 cm deep, 1.5 cm long and 0.4 cm wide. Bruising around wounds. 
+
+- Could the knives have made wounds of that size? Bruising suggests fully inserted but wound not deep enough, no exit wound.
+
+- Debates over whether blood on knife. Knife left bloody stain on mattress. If knife was washed, could that have removed blood and left DNA?
+
+- Inspector lied to Knox and told her blood had been found on knife. She had a worried conversation with her mother on the phone and this was used as evidence.
+
+
+---
+
+class: top
+
+# CEG for the minor wound
+
+.center[
+&lt;img src="Slides_files/figure-html/unnamed-chunk-9-1.png" width="80%" /&gt;
+]
+
+
+---
+
+class:top
+
+#Full CEG!
+
+.center[
+&lt;img src="Slides_files/figure-html/unnamed-chunk-10-1.png" width="90%" /&gt;
+]
+
+
+---
+
+class: top
+
+# Comparison between CEG, BN and Wigmore
+
+- For this case we also drew a BN and a Wigmore Chart.
+
+-  Wigmore Charts display legal arguments and are not usually probabilistic.
+
+- CEG easily displayed the time-ordered elements.
+
+- But was much much larger (and I didn't show the staged tree...)
+
+- CEGs and BNs require the probabilistic dependencies to be specified, and probabilities to be assigned to edges. Wigmore Charts do not. 
+
+- But then, BNs and CEGs can be used to compute probabilistic quantities.
+
+---
+
+class:top
+
+# Summary
+
+- CEGs document a mental model of how different aspects of a case relate to each other. 
+
+- Use them to work through and understand different possible arguments and how the available evidence supports the various propositions.
+
+- Mental model is that of the person who drew the network. 
+
+- They can be unwieldy, but so can manually assessing the evidence. 
+
+- They ensure that the evidence is considered in a logically consistent manner - avoiding potential errors and common fallacies.
+
+- Potential for object oriented CEGs, and NLP methods for extracting information to automate building of CEGs.
+
+---
+
+
+class: middle
+
+# RSS Statistics and the Law
+
+---
+class: top
+
+# RSS Statistics and the Law - training and policy
+
+- https://rss.org.uk/membership/rss-groups-and-committees/sections/statistics-law/
+
+- Section set up in 2015, aiming to improve the use of statistical evidence and statistical reasoning in the law, to provide a forum for those interested in research at the interface of statistics, law and forensic science and to influence policy in these areas.
+
+- Have produced or collaborated on various training documents for lawyers - ICCA guide, primers, Nuffield guides.
+
+- Responded to calls for evidence on forensic science guidelines, algorithms in the justice system, research in forensic science...
+
+- Work influenced inclusion of LR approach in FSR code of conduct. 
+
+---
+
+class: top
+
+# RSS Statistics and the Law - challenges
+- Challenging to communicate between two very different professions - statistics and law.
+
+- Easy to make errors in interpretation when you're dealing with subtle statistical points.
+
+- Can sometimes be difficult to convince the legal profession of the importance of statistics. See some of it as common sense. Sally Clark case helped. 
+
+- Not always obvious when statistics present. No p-value, doesn't mean there's no statistics - data collection, presentation and interpretation can be hidden.
+
+- How to teach lawyers when to call a statistician perhaps more attainable goal than teaching them statistics.
+
+- Adversarial system sometimes works against us - the goal of the lawyer is not to be correct but to win the case.
+
+---
+
+class: top
+
+# Healthcare Serial Killer or Coincidence?
+
+- Latest report: ‘Healthcare serial killer or coincidence? Statistical issues in investigation of suspected medical misconduct’.
+
+https://tinyurl.com/ww64s34y
+
+- Authors: Peter Green, Julia Mortera, Neil McKenzie, Richard Gill, William Thompson. Statisticians, lawyers, psychologists, expert witnesses.
+
+- Published September 2022. 
+
+- A discussion of the various statistical issues facing those investigating medical misconduct cases with case studies and recommendations.
+
+---
+
+class: top
+
+# Recommendations - p-values
+
+
+- In presenting the results of statistical
+tests, both the level of statistical significance (p-value) and
+the estimated effect size should be stated. One addresses the question of whether an effect is truly detected, the other
+quantifies the size of that effect, if it exists. These are
+different concepts and both are important; neither should be
+confused with subjective judgements about the credibility of
+the expert witness.
+
+- In reports and testimony, experts
+should take care to explain the proper interpretation of p-values and should avoid drawing fallacious inferences from
+them. In jurisdictions that rely on lay jurors, judges should
+consider providing instructions about the proper use of p-values. Lawyers, judges and investigators should educate
+themselves to the dangers of fallacious statistical
+interpretation. Lawyers should endeavour to present the case
+in a manner conducive to correct understanding, avoiding to
+the extent possible testimony or arguments conducive to
+misinterpretations.
+
+---
+
+class:top
+
+#Recommendations - correlation is not causation
+
+- It is vital that investigators appreciate
+the truth of the statement that "correlation is not causation", and the fact that the connection between them is well-studied, and that in fields such as medical
+diagnosis there are accepted criteria to guide the valid
+drawing of conclusions in observational studies. Possible confounding factors must be
+identified, and their effect quantified, before attributing
+causes to observed effects.
+
+---
+
+class:top
+
+#Recommendations - bias
+
+- Investigations should be guided by
+panels representing all relevant areas of expertise but
+independent of both the suspect and the employing
+institution.
+
+- To the maximum extent practicable,
+experts informing an investigation, such as DNA specialists,
+fingerprint examiners, toxicologists, and pathologists should
+be kept `blind' to all aspects of the case irrelevant to the
+question they are being asked to answer. Blinding is a key
+tool in minimising prejudicial subjective effects such as
+unconscious bias.
+
+---
+
+class: top
+
+# Recommendations - experts and training.
+
+- It is important that all parties
+involved in investigation and prosecution in such
+cases consult with professional statisticians, and use only
+such appropriately qualified individuals as expert witnesses.
+
+- When courts must evaluate the results
+of problematic investigations, it is particularly important that
+they consider reports and expert testimony from independent
+statisticians. If investigative bias is a significant concern,
+lawyers and courts should also consider seeking evaluations
+from experts of cognitive bias and factors associated with the
+accuracy of expert judgment.
+
+- Further interaction between legal and
+statistical communities should be fostered by the leaders of
+the legal and statistical communities, with a view to
+promoting joint educational activities.
+
+---
+
+class: top
+
+# Conclusions
+
+- Methods for interpreting the evidential value of single items of forensic evidence under straightforward hypotheses are fairly well-established.
+
+- Graphical approaches can help us in more complicated situations, at the whole case level, where there are multiple pieces of correlated evidence and where hypotheses are at the activity-level. 
+
+- Useful for many different aspects of the legal process - investigation, forensic evidence evaluation, assessing which arguments are compelling and making probabilistic statements about the case or pieces of evidence.
+
+- Require coordination between statisticians, forensic scientists and lawyers to set out arguments being made and how the evidence fits in and to assign probabilities.
+
+- Progress has been made but there is still much work to be done in bridging the gap between statisticians and lawyers to ensure proper interpretation of statistical evidence and correct statistical reasoning in the courtroom. 
+
+- Mardia workshops in December in London on understanding of legal systems and algorithms in the justice system: https://warwick.ac.uk/fac/sci/statistics/applied-statistics-and-risk-unit/mardia-front-page/
+
+---
+
+class: top
+
+# References
+
+- Likelihood ratios for drugs on banknotes: &lt;br&gt;
+The evaluation of evidence for auto‐correlated data in relation to traces of cocaine on banknotes, A.L. Wilson, C.G.G. Aitken, R. Sleeman, J. Carter, Journal of the Royal Statistical Society: Series C (Applied Statistics), 2015, 64(2), 275-298
+
+- Chain Event Graphs work on banknotes: &lt;br&gt;
+Chain event graphs for assessing activity-level propositions in forensic science in relation to drug traces on banknotes, G. Robertson, A.L. Wilson, J.Q. Smith, Law, Probability and Risk (to appear)
+
+- Chain Event Graphs for Kercher case: &lt;br&gt;
+A comparison of graphical methods in the case of the murder of Meredith Kercher, A.P. Dawid, F. Dotto, M. Graves, J.B. Kadane, J. Mortera, G. Robertson, J.Q. Smith, A.L. Wilson, under review. https://arxiv.org/pdf/2403.16628
+
+
+---
+    </textarea>
+<style data-target="print-only">@media screen {.remark-slide-container{display:block;}.remark-slide-scaler{box-shadow:none;}}</style>
+<script src="https://remarkjs.com/downloads/remark-latest.min.js"></script>
+<script>var slideshow = remark.create({
+"ratio": "16:9",
+"highlightLines": true,
+"highlightStyle": "solarized-light",
+"countIncrementalSlides": false
+});
+if (window.HTMLWidgets) slideshow.on('afterShowSlide', function (slide) {
+  window.dispatchEvent(new Event('resize'));
+});
+(function(d) {
+  var s = d.createElement("style"), r = d.querySelector(".remark-slide-scaler");
+  if (!r) return;
+  s.type = "text/css"; s.innerHTML = "@page {size: " + r.style.width + " " + r.style.height +"; }";
+  d.head.appendChild(s);
+})(document);
+
+(function(d) {
+  var el = d.getElementsByClassName("remark-slides-area");
+  if (!el) return;
+  var slide, slides = slideshow.getSlides(), els = el[0].children;
+  for (var i = 1; i < slides.length; i++) {
+    slide = slides[i];
+    if (slide.properties.continued === "true" || slide.properties.count === "false") {
+      els[i - 1].className += ' has-continuation';
+    }
+  }
+  var s = d.createElement("style");
+  s.type = "text/css"; s.innerHTML = "@media print { .has-continuation { display: none; } }";
+  d.head.appendChild(s);
+})(document);
+// delete the temporary CSS (for displaying all slides initially) when the user
+// starts to view slides
+(function() {
+  var deleted = false;
+  slideshow.on('beforeShowSlide', function(slide) {
+    if (deleted) return;
+    var sheets = document.styleSheets, node;
+    for (var i = 0; i < sheets.length; i++) {
+      node = sheets[i].ownerNode;
+      if (node.dataset["target"] !== "print-only") continue;
+      node.parentNode.removeChild(node);
+    }
+    deleted = true;
+  });
+})();
+// add `data-at-shortcutkeys` attribute to <body> to resolve conflicts with JAWS
+// screen reader (see PR #262)
+(function(d) {
+  let res = {};
+  d.querySelectorAll('.remark-help-content table tr').forEach(tr => {
+    const t = tr.querySelector('td:nth-child(2)').innerText;
+    tr.querySelectorAll('td:first-child .key').forEach(key => {
+      const k = key.innerText;
+      if (/^[a-z]$/.test(k)) res[k] = t;  // must be a single letter (key)
+    });
+  });
+  d.body.setAttribute('data-at-shortcutkeys', JSON.stringify(res));
+})(document);
+(function() {
+  "use strict"
+  // Replace <script> tags in slides area to make them executable
+  var scripts = document.querySelectorAll(
+    '.remark-slides-area .remark-slide-container script'
+  );
+  if (!scripts.length) return;
+  for (var i = 0; i < scripts.length; i++) {
+    var s = document.createElement('script');
+    var code = document.createTextNode(scripts[i].textContent);
+    s.appendChild(code);
+    var scriptAttrs = scripts[i].attributes;
+    for (var j = 0; j < scriptAttrs.length; j++) {
+      s.setAttribute(scriptAttrs[j].name, scriptAttrs[j].value);
+    }
+    scripts[i].parentElement.replaceChild(s, scripts[i]);
+  }
+})();
+(function() {
+  var links = document.getElementsByTagName('a');
+  for (var i = 0; i < links.length; i++) {
+    if (/^(https?:)?\/\//.test(links[i].getAttribute('href'))) {
+      links[i].target = '_blank';
+    }
+  }
+})();
+// adds .remark-code-has-line-highlighted class to <pre> parent elements
+// of code chunks containing highlighted lines with class .remark-code-line-highlighted
+(function(d) {
+  const hlines = d.querySelectorAll('.remark-code-line-highlighted');
+  const preParents = [];
+  const findPreParent = function(line, p = 0) {
+    if (p > 1) return null; // traverse up no further than grandparent
+    const el = line.parentElement;
+    return el.tagName === "PRE" ? el : findPreParent(el, ++p);
+  };
+
+  for (let line of hlines) {
+    let pre = findPreParent(line);
+    if (pre && !preParents.includes(pre)) preParents.push(pre);
+  }
+  preParents.forEach(p => p.classList.add("remark-code-has-line-highlighted"));
+})(document);</script>
+
+<script>
+slideshow._releaseMath = function(el) {
+  var i, text, code, codes = el.getElementsByTagName('code');
+  for (i = 0; i < codes.length;) {
+    code = codes[i];
+    if (code.parentNode.tagName !== 'PRE' && code.childElementCount === 0) {
+      text = code.textContent;
+      if (/^\\\((.|\s)+\\\)$/.test(text) || /^\\\[(.|\s)+\\\]$/.test(text) ||
+          /^\$\$(.|\s)+\$\$$/.test(text) ||
+          /^\\begin\{([^}]+)\}(.|\s)+\\end\{[^}]+\}$/.test(text)) {
+        code.outerHTML = code.innerHTML;  // remove <code></code>
+        continue;
+      }
+    }
+    i++;
+  }
+};
+slideshow._releaseMath(document);
+</script>
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+(function () {
+  var script = document.createElement('script');
+  script.type = 'text/javascript';
+  script.src  = 'https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-MML-AM_CHTML';
+  if (location.protocol !== 'file:' && /^https?:/.test(script.src))
+    script.src  = script.src.replace(/^https?:/, '');
+  document.getElementsByTagName('head')[0].appendChild(script);
+})();
+</script>
+  </body>
+</html>
