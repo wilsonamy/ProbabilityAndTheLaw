@@ -5,7 +5,7 @@
     <meta charset="utf-8" />
     <meta name="author" content="University of Edinburgh" />
     <meta name="date" content="2024-11-29" />
-    <script src="libs/header-attrs-2.18/header-attrs.js"></script>
+    <script src="libs/header-attrs-2.27/header-attrs.js"></script>
     <link rel="stylesheet" href="xaringan-themer.css" type="text/css" />
     <link rel="stylesheet" href="slides.css" type="text/css" />
   </head>
@@ -33,17 +33,32 @@ class: center, middle, inverse, title-slide
 
 class: top
 
+#Motivation
+
+- Criminal cases can be complicated. Many pieces of evidence, some quantitative, some not. 
+
+- Probabilistic reasoning is not straightforward, even for statisticians.
+
+- High profile example: the Lucy Letby case. Trial lasted a year. Multiple babies involved (some multiple births), medical evidence from multiple experts, data on whether present or not, discussion of motive (digital evidence, notes), ... experts still arguing several years later. How to make sense of it all?
+
+- Miscarriages of justice have happened due to failures in probabilistic reasoning, e.g. Sally Clark.
+
+---
+
+class: top
+
 # Introduction
 
 .pull-left[
 
-- Likelihood ratios for single items of forensic evidence
+- Framework for single items of forensic evidence
 
 - Graphical modelling for more complicated combinations of evidence. Two examples: drugs on banknotes and the case of Meredith Kercher. 
 
-- RSS Statistics and the Law Section activity
+- Moving from theory to practice.
 
-- Including the "Healthcare Serial Killer or Coincidence?" report of September 2022.
+- Medical misconduct cases.
+
 ]
 
 .pull-right[
@@ -58,31 +73,50 @@ class: top
 
 class:middle
 
-#Likelihood Ratios
+#Single items of forensic evidence
+
+---
+class: top
+# Likelihood ratios
+
+- Many types of forensic evidence are associated with measurements and data - DNA, trace evidence, biometric evidence.
+
+- Criminal cases tend to feature two competing arguments.
+
+- For evidence `\(E\)`, prosecution proposition `\(H_p\)` and defence proposition `\(H_d\)`, likelihood ratio is:
+
+`$$\frac{P(E \mid H_p)}{P(E \mid H_d)}$$`
+
+- Reasoning from the odds form of Bayes theorem.
+
+`$$\frac{P(H_p \mid E)}{P(H_d \mid E)}= \frac{P(E \mid H_p)}{P(E \mid H_d)} \times \frac{P(H_p)}{P(H_d)}$$`
+
 
 ---
 class:top
 
 #Likelihood Ratios for statistical evidence
 
-
-- Many types of forensic evidence are associated with measurements and data - DNA, trace evidence, biometric evidence.
-
-- How should these measurements be interpreted in a court of law?
-
-- For single piece of evidence can build
-statistical model and evaluate Bayes’ Factor under various
-hypotheses being considered by court.
-
-- For evidence `\(E\)`, prosecution proposition `\(H_p\)` and defence proposition `\(H_d\)`:
-
-`$$\frac{P(E \mid H_p)}{P(E \mid H_d)}$$`
+- Framework is reasonably well accepted in forensic science.
 
 - Methodology features in Forensic Science Regulator Code of Conduct: 
 https://assets.publishing.service.gov.uk/media/602407728fa8f5146f0769d9/FSR-C-118_Interpretation_Appendix_Issue_1__002_.pdf
 
+- Lots of research has been done on developing different statistical models for different evidence types although outside of DNA the framework is used more qualitatively in practice, i.e. the need to consider the likelihood of the evidence under at least two competing propositions.
+
+- Motivated by Sally Clark. Avoids Prosecutor's Fallacy. Note the code of conduct doesn't cover forensic pathology.
 
 ---
+class:top
+# Verbal Scale
+
+
+.center[
+&lt;img src="img/VerbalScale.png" width="50%" /&gt;
+]
+
+---
+
 class: top
 # Multiple pieces of evidence
 
@@ -92,16 +126,15 @@ evidence? How should the likelihood ratio be computed?
 - Bayesian Networks first used for the modelling of legal evidence in 1989 in paper by Aitken and Gammerman. 
 
 .center[
-&lt;img src="Slides_files/figure-html/unnamed-chunk-2-1.png" width="45%" /&gt;
+&lt;img src="Slides_files/figure-html/unnamed-chunk-3-1.png" width="45%" /&gt;
 ]
 ---
 
 class:middle
 
-# Probabilistic reasoning in legal cases
+# Graphical modelling
 
 ---
-
 
 class: top
 
@@ -110,7 +143,7 @@ class: top
 - Work with Jim Smith, Gail Robertson, Philip Dawid, Jay Kadane,
 Julia Mortera, Francesco Dotto. Funded by Turing Institute.
 
-- Can graphical methods be used to aid decision-making in legal cases? For example, to assist lawyers in putting together arguments for a case and to assist the judge and jury in coming to conclusions?
+- Can graphical methods be used to aid decision-making in legal cases? For example, to assist in investigation, to assist lawyers in putting together arguments for a case and to assist the judge and jury in coming to conclusions?
 
 - Or at least to help ensure that the evidential weight of dependent pieces of statistical evidence is computed in a probabilistically correct framework. 
 
@@ -142,7 +175,7 @@ class:top
 subsequently placed - nodes coloured red. 
 
 .center[
-&lt;img src="Slides_files/figure-html/unnamed-chunk-3-1.png" width="45%" /&gt;
+&lt;img src="Slides_files/figure-html/unnamed-chunk-4-1.png" width="45%" /&gt;
 ]
 
 
@@ -159,7 +192,7 @@ class:top
 - Each path through the graph describes a possible unfolding in the case
 
 .center[
-&lt;img src="Slides_files/figure-html/unnamed-chunk-4-1.png" width="70%" /&gt;
+&lt;img src="Slides_files/figure-html/unnamed-chunk-5-1.png" width="70%" /&gt;
 ]
 
 ---
@@ -227,7 +260,7 @@ class:top
 
 class:top
 
-# Evidence and arguments
+# Evidence and propositions
 
 Evidence
 - £100k found at property in safe
@@ -235,7 +268,7 @@ Evidence
 - Measurements taken of heroin on banknotes
 - Measurements taken of contamination on tamper evident bags
 
-Arguments
+Propositions
 - `\(H_{p_1}\)`: The suspect obtained the banknotes by dealing drugs 
 - `\(H_{p_2}\)`: The suspect knowingly used a jewellery business to launder money obtained by the drug trafficking activities of others.
 - `\(H_{d_1}\)`: The suspect had a legitimate jewellery business selling jewellery to the general public
@@ -280,6 +313,8 @@ $$
 - For forensic scientists. Also possible to compute LRs for the evidence by conditioning on the edges associated with the propositions. 
 
 - For lawyers. Can do sensitivity analysis, investigate which arguments are plausible.
+
+- For police. Where is more evidence needed? Is there enough evidence to prosecute?
 
 ---
 
@@ -333,7 +368,7 @@ class: top
 # CEG for the minor wound
 
 .center[
-&lt;img src="Slides_files/figure-html/unnamed-chunk-9-1.png" width="80%" /&gt;
+&lt;img src="Slides_files/figure-html/unnamed-chunk-10-1.png" width="80%" /&gt;
 ]
 
 
@@ -344,7 +379,7 @@ class:top
 #Full CEG!
 
 .center[
-&lt;img src="Slides_files/figure-html/unnamed-chunk-10-1.png" width="90%" /&gt;
+&lt;img src="Slides_files/figure-html/unnamed-chunk-11-1.png" width="90%" /&gt;
 ]
 
 
@@ -389,7 +424,7 @@ class:top
 
 class: middle
 
-# RSS Statistics and the Law
+# From theory to practice
 
 ---
 class: top
@@ -404,18 +439,19 @@ class: top
 
 - Responded to calls for evidence on forensic science guidelines, algorithms in the justice system, research in forensic science...
 
-- Work influenced inclusion of LR approach in FSR code of conduct. 
+- Work influenced inclusion of LR framework in FSR code of conduct. 
 
 ---
 
 class: top
 
-# RSS Statistics and the Law - challenges
+# Much more to be done
+
 - Challenging to communicate between two very different professions - statistics and law.
 
 - Easy to make errors in interpretation when you're dealing with subtle statistical points.
 
-- Can sometimes be difficult to convince the legal profession of the importance of statistics. See some of it as common sense. Sally Clark case helped. 
+- Can sometimes be difficult to convince the legal profession of the importance of statistics. Seen as common sense. Sally Clark case helped. 
 
 - Not always obvious when statistics present. No p-value, doesn't mean there's no statistics - data collection, presentation and interpretation can be hidden.
 
@@ -424,12 +460,24 @@ class: top
 - Adversarial system sometimes works against us - the goal of the lawyer is not to be correct but to win the case.
 
 ---
+class: top
 
+# Ongoing plans
+
+- CPD training for advocates and crime scene investigators. 
+
+- Improving access to statistical expert witnesses. Not enough highly trained statisticians and the lawyers don't know where to find them. Planning a mentor scheme and to publish example expert witness reports.
+
+- Further training documentation. How to interrogate an expert witness report. How to spot statistical evidence. 
+
+- Further reform to policy to incorporate broader statistical points when there are clusters of events and interrelated pieces of evidence.
+
+---
 class: top
 
 # Healthcare Serial Killer or Coincidence?
 
-- Latest report: ‘Healthcare serial killer or coincidence? Statistical issues in investigation of suspected medical misconduct’.
+- Latest RSS S&amp;tL report: ‘Healthcare serial killer or coincidence? Statistical issues in investigation of suspected medical misconduct’.
 
 https://tinyurl.com/ww64s34y
 
@@ -437,89 +485,50 @@ https://tinyurl.com/ww64s34y
 
 - Published September 2022. 
 
-- A discussion of the various statistical issues facing those investigating medical misconduct cases with case studies and recommendations.
+- A discussion of the various statistical issues facing those investigating medical misconduct cases with case studies and a set of recommendations.
 
 ---
-
 class: top
 
-# Recommendations - p-values
+# Clusters of events
 
+- Common starting point - a perceived increase in deaths or adverse events in a medical setting. Has there been a crime?
 
-- In presenting the results of statistical
-tests, both the level of statistical significance (p-value) and
-the estimated effect size should be stated. One addresses the question of whether an effect is truly detected, the other
-quantifies the size of that effect, if it exists. These are
-different concepts and both are important; neither should be
-confused with subjective judgements about the credibility of
-the expert witness.
+- Given many possible covariates it's not obvious when a spike is really a spike. Was there a change in the underlying population (lower birthweight babies, more births)? Was it just random?
 
-- In reports and testimony, experts
-should take care to explain the proper interpretation of p-values and should avoid drawing fallacious inferences from
-them. In jurisdictions that rely on lay jurors, judges should
-consider providing instructions about the proper use of p-values. Lawyers, judges and investigators should educate
-themselves to the dangers of fallacious statistical
-interpretation. Lawyers should endeavour to present the case
-in a manner conducive to correct understanding, avoiding to
-the extent possible testimony or arguments conducive to
-misinterpretations.
+- Statistical input is needed. In the Letby case the prosecution did not get statistical advice but still made probabilistic arguments:
+
+"The statistics of the mortality rate were comparable, prior to January 2015, but there was "a significant rise" in the number of babies dying or having "catastrophic collapses"
+
+- Prosecutor's Fallacy - small probability of seeing n deaths given no foul play does not imply foul play. Alternative explanations (as per FSR guidance) need to be considered.
 
 ---
-
-class:top
-
-#Recommendations - correlation is not causation
-
-- It is vital that investigators appreciate
-the truth of the statement that "correlation is not causation", and the fact that the connection between them is well-studied, and that in fields such as medical
-diagnosis there are accepted criteria to guide the valid
-drawing of conclusions in observational studies. Possible confounding factors must be
-identified, and their effect quantified, before attributing
-causes to observed effects.
-
----
-
-class:top
-
-#Recommendations - bias
-
-- Investigations should be guided by
-panels representing all relevant areas of expertise but
-independent of both the suspect and the employing
-institution.
-
-- To the maximum extent practicable,
-experts informing an investigation, such as DNA specialists,
-fingerprint examiners, toxicologists, and pathologists should
-be kept `blind' to all aspects of the case irrelevant to the
-question they are being asked to answer. Blinding is a key
-tool in minimising prejudicial subjective effects such as
-unconscious bias.
-
----
-
 class: top
 
-# Recommendations - experts and training.
+# Perceived patterns
 
-- It is important that all parties
-involved in investigation and prosecution in such
-cases consult with professional statisticians, and use only
-such appropriately qualified individuals as expert witnesses.
+- A set of adverse events is picked and a single healthcare professional is found to be present for all of them.
+  - How was an adverse event defined? Cognitive bias often a problem. 
+  - What counts as presence?
+  - Are the adverse events independent? Some same baby or multiples. 
+  - Was blinding/ redaction applied as necessary?
+  - How often was the healthcare professional at work and at what times?
+- Again, probabilistic arguments being made without a statistician:
+“As with all these cases – it is the coincidence of problems happening when Lucy Letby was about and the coincidence of the same problems happening with different babies at different times, which we suggest is so telling and indicates that it was her malign hand at work.”
+- Correlation of Letby being on duty for the events picked out by the medical expert was taken as evidence of Letby’s guilt. But “correlation is not causation”. And we cannot distinguish between malice and incompetence.
 
-- When courts must evaluate the results
-of problematic investigations, it is particularly important that
-they consider reports and expert testimony from independent
-statisticians. If investigative bias is a significant concern,
-lawyers and courts should also consider seeking evaluations
-from experts of cognitive bias and factors associated with the
-accuracy of expert judgment.
+---
+class: top
 
-- Further interaction between legal and
-statistical communities should be fostered by the leaders of
-the legal and statistical communities, with a view to
-promoting joint educational activities.
+# No statistics?
 
+- 'It is absolutely astounding that statisticians are pursuing this narrative,' Dr Evans said (main medical expert witness). 'The way the police investigated the case, the way the prosecution conducted the case and the way all of us gave evidence on behalf of the prosecution in the trial had nothing to do with statistics.’
+
+- It's not always obvious to non-statisticians when statistics is being done. Study design, collection, interpretation and presentation are all statistics. 
+
+- The system is such that the police/ lawyers are the ones deciding where statistical input is needed. 
+
+- Deficiencies in statistical thinking at a whole case level. Can graphical modelling approaches help?
 ---
 
 class: top
@@ -528,15 +537,13 @@ class: top
 
 - Methods for interpreting the evidential value of single items of forensic evidence under straightforward hypotheses are fairly well-established.
 
-- Graphical approaches can help us in more complicated situations, at the whole case level, where there are multiple pieces of correlated evidence and where hypotheses are at the activity-level. 
+- Graphical approaches help in more complex situations, where there are multiple pieces of correlated evidence or where hypotheses are at the activity-level. 
 
 - Useful for many different aspects of the legal process - investigation, forensic evidence evaluation, assessing which arguments are compelling and making probabilistic statements about the case or pieces of evidence.
 
 - Require coordination between statisticians, forensic scientists and lawyers to set out arguments being made and how the evidence fits in and to assign probabilities.
 
 - Progress has been made but there is still much work to be done in bridging the gap between statisticians and lawyers to ensure proper interpretation of statistical evidence and correct statistical reasoning in the courtroom. 
-
-- Mardia workshops in December in London on understanding of legal systems and algorithms in the justice system: https://warwick.ac.uk/fac/sci/statistics/applied-statistics-and-risk-unit/mardia-front-page/
 
 ---
 
@@ -548,7 +555,7 @@ class: top
 The evaluation of evidence for auto‐correlated data in relation to traces of cocaine on banknotes, A.L. Wilson, C.G.G. Aitken, R. Sleeman, J. Carter, Journal of the Royal Statistical Society: Series C (Applied Statistics), 2015, 64(2), 275-298
 
 - Chain Event Graphs work on banknotes: &lt;br&gt;
-Chain event graphs for assessing activity-level propositions in forensic science in relation to drug traces on banknotes, G. Robertson, A.L. Wilson, J.Q. Smith, Law, Probability and Risk (to appear)
+Chain event graphs for assessing activity-level propositions in forensic science in relation to drug traces on banknotes, G. Robertson, A.L. Wilson, J.Q. Smith, Law, Probability and Risk, 2024, https://doi.org/10.1093/lpr/mgae013
 
 - Chain Event Graphs for Kercher case: &lt;br&gt;
 A comparison of graphical methods in the case of the murder of Meredith Kercher, A.P. Dawid, F. Dotto, M. Graves, J.B. Kadane, J. Mortera, G. Robertson, J.Q. Smith, A.L. Wilson, under review. https://arxiv.org/pdf/2403.16628
